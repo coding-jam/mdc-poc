@@ -5,7 +5,6 @@ import org.slf4j.MDC;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
-import java.util.UUID;
 
 @WebFilter(urlPatterns = "*")
 public class LogEnricherFilter implements Filter {
@@ -18,8 +17,7 @@ public class LogEnricherFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            String logData = String.format("[IP: %s | REQ_ID: %s]", servletRequest.getRemoteAddr(), UUID.randomUUID().toString());
-            MDC.put("logData", logData);
+            MDC.put("X-Ip", servletRequest.getRemoteAddr());
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             MDC.clear();
